@@ -1,13 +1,17 @@
+import _ from "lodash";
 import jsonPlaceHolder from "../apis/jsonPlaceHolder";
+export const fetchPosts = () => async (dispatch) => {
+  // inside this inner function there is no need to return an action.
+  const response = await jsonPlaceHolder.get("./posts");
 
-export const fetchPosts = () =>
-  /* bad approach as it breaks the rules of redux
-  const response = await jsonPlaceHolder.get("/posts");
-  */
+  dispatch({ type: "FETCH_POSTS", payload: response.data });
+};
 
-  async (dispatch) => {
-    // inside this inner function there is no need to return an action.
-    const response = await jsonPlaceHolder.get("./posts");
+export const fetchUser = (id) => async (dispatch) => {
+  _fetchUser(id, dispatch);
+};
 
-    dispatch({ type: "FETCH_POSTS", payload: response.data });
-  };
+const _fetchUser = _.memoize(async (id, dispatch) => {
+  const response = await jsonPlaceHolder.get(`./users/${id}`);
+  dispatch({ type: "FETCH_USER", payload: response.data });
+});
